@@ -22,7 +22,6 @@ public class MemberSaveControllerV2 implements ControllerV2 {
     request.setAttribute("member", member);
     memberRepository.save(member);
 
-
     return new MView("/WEB-INF/views/save-result.jsp");
   }
 }
