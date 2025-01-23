@@ -21,9 +21,9 @@ public class MView {
     dispatcher.forward(request, response);
   }
 
-  public void render(Map<String, Object> mv, HttpServletRequest request, HttpServletResponse response)
+  public void render(HttpServletRequest request, HttpServletResponse response, Map<String, Object> model)
       throws ServletException, IOException {
-    modelToRequestAttribute(mv, request);
+    modelToRequestAttribute(model, request);
     RequestDispatcher dispatcher = request.getRequestDispatcher(this.viewPath);
     dispatcher.forward(request, response);
   }

@@ -1,4 +1,4 @@
-package com.hyuki.springstudymvc1.web.frontcontroller.v3;
+package com.hyuki.springstudymvc1.web.frontcontroller.v4;
 
 import com.hyuki.springstudymvc1.web.frontcontroller.MView;
 import com.hyuki.springstudymvc1.web.frontcontroller.ModelView;
@@ -11,35 +11,34 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet(name = "frontControllerV3", urlPatterns = "/front-controller/v3/*")
-public class FrontControllerV3 extends HttpServlet {
+@WebServlet(name = "frontControllerV4", urlPatterns = "/front-controller/v4/*")
+public class FrontControllerV4 extends HttpServlet {
 
   private static final String URL_PREFIX = "/WEB-INF/views/";
   private static final String EXTEND = ".jsp";
 
-  private final Map<String, ControllerV3> controllerHandler = new HashMap<>();
+  private final Map<String, ControllerV4> controllerHandler = new HashMap<>();
 
-  public FrontControllerV3() {
-    controllerHandler.put("/front-controller/v3/members/new-form", new MemberFormControllerV3());
-    controllerHandler.put("/front-controller/v3/members/save", new MemberSaveControllerV3());
-    controllerHandler.put("/front-controller/v3/members", new MemberListControllerV3());
+  public FrontControllerV4() {
+    controllerHandler.put("/front-controller/v4/members/new-form", new MemberFormControllerV4());
+    controllerHandler.put("/front-controller/v4/members/save", new MemberSaveControllerV4());
+    controllerHandler.put("/front-controller/v4/members", new MemberListControllerV4());
   }
 
   @Override
   protected void service(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    ControllerV3 controller = controllerHandler.get(request.getRequestURI());
+    ControllerV4 controller = controllerHandler.get(request.getRequestURI());
     if (controller == null) {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
       return;
     }
 
-    Map<String, String> data = createParamMap(request);
-    ModelView mv = controller.process(data);
+    Map<String, Object> model = new HashMap<>();
+    MView view = viewResolver(controller.process(createParamMap(request), model));
 
-    MView view = viewResolver(mv.getViewName());
-    view.render(request, response, mv.getModel());
+    view.render(request, response, model);
   }
 
   private Map<String, String> createParamMap(HttpServletRequest request) {
